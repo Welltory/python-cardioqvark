@@ -12,7 +12,6 @@ with open('HISTORY.rst') as history_file:
 requirements = [
     'requests',
     'ujson'
-    # TODO: put package requirements here
 ]
 
 test_requirements = [
