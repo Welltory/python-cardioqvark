@@ -51,15 +51,15 @@ lint: ## check style with flake8
 	flake8 python_cardioqvark tests
 
 test: ## run tests quickly with the default Python
-	py.test
-	
+	py.test -s
+
 
 test-all: ## run tests on every Python version with tox
 	tox
 
 coverage: ## check code coverage quickly with the default Python
 	coverage run --source python_cardioqvark py.test
-	
+
 		coverage report -m
 		coverage html
 		$(BROWSER) htmlcov/index.html
