@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from .base import BaseAPIClient
+from .client import CardioQVARKClient
 
 __all__ = [
-    'BaseAPIClient'
+    'CardioQVARKClient'
 ]
 __author__ = 'Maxim Smirnoff'
 __email__ = 'smirnoffmg@gmail.com'
