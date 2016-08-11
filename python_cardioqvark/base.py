@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
+import re
 import tempfile
+from itertools import cycle
 from urlparse import urljoin
 
 import requests
@@ -22,8 +24,10 @@ class BaseAPIClient(object):
 
     settings = None
 
-    api_server_url = None
     cloud_server_url = None
+
+    __api_server_urls = []
+    __cloud_server_urls = []
 
     def __init__(self, client_id, client_password, role_id=3,
                  path_to_client_cert=None):
@@ -38,15 +42,24 @@ class BaseAPIClient(object):
 
         self.__download_ca()
         self.__create_full_client_cert()
-        self.settings = self.__get_settings()
-
-        self.api_server_url = self.settings['api'][0]
-        self.cloud_server_url = self.settings['cloud'][0]
+        self.__set_settings()
 
     def __repr__(self):
         return 'Client for CardioQVARK API with client_id: {}'.format(
             self.client_id
         )
+
+    @property
+    def api_server_url(self):
+        if self.__api_server_urls:
+            return next(self.__api_server_urls)
+        return None
+
+    @property
+    def cloud_server_url(self):
+        if self.__cloud_server_urls:
+            return next(self.__cloud_server_urls)
+        return None
 
     @staticmethod
     def __get_full_url(server, url, port=1443):
@@ -93,21 +106,45 @@ class BaseAPIClient(object):
 
             self.path_to_full_client_cert = full_client_cert.name
 
-    def __get_settings(self):
+    def __set_settings(self):
         r = self._call_api_method('/settings')
-        if r.status_code == 200:
-            return r.json()
-        raise CardioQVARKException(r.status_code)
+        if r.status_code != 200:
+            raise CardioQVARKException(r.status_code)
 
-    def _call_api_method(self, url, method='GET', server=None):
+        result = r.json()
+        self.__api_server_urls = cycle(result['api'])
+        self.__cloud_server_urls = cycle(result['cloud'])
+
+    def _call_api_method(self, url, method='GET', server=None, headers=None,
+                         **params):
+        if headers is None:
+            headers = {}
         server = server or self.api_server_url or API_BASE_URL
+
         full_url = self.__get_full_url(server, url)
         response = requests.request(
             method=method,
             url=full_url,
             verify=False,
             cert=self.path_to_full_client_cert,
-            timeout=1
+            timeout=1,
+            params=params,
+            headers=headers
         )
 
+        if response.status_code != 200:
+            raise CardioQVARKException(response.raw)
+
         return response
+
+    def _parse_response_headers(self, headers):
+        result = {}
+        if 'content-range' in headers.keys():
+            _from, _to, _max = re.findall('\d+', headers['content-range'])
+            result.update({
+                'range_start': _from,
+                'range_end': _to,
+                'max': _max
+            })
+
+        return result

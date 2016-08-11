@@ -20,12 +20,12 @@ test_requirements = [
 
 setup(
     name='python_cardioqvark',
-    version='0.1.0',
+    version='0.2.0',
     description="Python API wrapper for CardioQVARK",
     long_description=readme + '\n\n' + history,
     author="Maxim Smirnoff",
     author_email='smirnoffmg@gmail.com',
-    url='https://github.com/budurli/python_cardioqvark',
+    url='https://github.com/Welltory/python-cardioqvark',
     packages=[
         'python_cardioqvark',
     ],

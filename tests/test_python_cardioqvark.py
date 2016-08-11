@@ -17,13 +17,15 @@ class TestPythonCardioQVARKApiClient(object):
         cls.test_client = CardioQVARKClient(
             client_id=4450,
             client_password='testpassword')
+        print(cls.test_client)
 
     def test_client_settings(self):
-        assert self.test_client.settings != {}
+        assert self.test_client.api_server_url
+        assert self.test_client.cloud_server_url
 
-    def test_client_get_cardiogram(self):
-        cardiogram = self.test_client.get_cardiogram(7612)
-        assert cardiogram != {}
+    def test_client_get_all_cardiograms(self):
+        cardiograms = self.test_client.get_cardiogram()
+        assert cardiograms
 
     def test_client_get_patient(self):
         patient = self.test_client.get_patient(1004)
