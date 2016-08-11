@@ -3,7 +3,11 @@ import os
 import re
 import tempfile
 from itertools import cycle
-from urlparse import urljoin
+
+try:
+    from urllib.parse import urljoin
+except ImportError:
+    from urlparse import urljoin
 
 import requests
 import ujson as json
@@ -98,10 +102,10 @@ class BaseAPIClient(object):
 
     def __create_full_client_cert(self):
         with tempfile.NamedTemporaryFile(delete=False) as full_client_cert:
-            with open(self.path_to_client_cert, 'r') as client_cert:
+            with open(self.path_to_client_cert, 'rb') as client_cert:
                 full_client_cert.write(client_cert.read())
 
-            with open(self.path_to_qvark_cert, 'r') as qvark_cert:
+            with open(self.path_to_qvark_cert, 'rb') as qvark_cert:
                 full_client_cert.write(qvark_cert.read())
 
             self.path_to_full_client_cert = full_client_cert.name
