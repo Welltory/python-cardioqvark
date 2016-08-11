@@ -132,8 +132,6 @@ class BaseAPIClient(object):
             headers=headers
         )
 
-        print(response.headers)
-
         if response.status_code != 200:
             raise CardioQVARKException(response.raw)
 
