@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import re
 import tempfile
 from itertools import cycle
 from urlparse import urljoin
@@ -137,3 +138,15 @@ class BaseAPIClient(object):
             raise CardioQVARKException(response.raw)
 
         return response
+
+    def _parse_response_headers(self, headers):
+        result = {}
+        if 'content-range' in headers.keys():
+            _from, _to, _max = re.findall('\d+', headers['content-range'])
+            result.update({
+                'range_start': _from,
+                'range_end': _to,
+                'max': _max
+            })
+
+        return result

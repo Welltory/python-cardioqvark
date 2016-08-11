@@ -14,13 +14,18 @@ class CardioQVARKClient(BaseAPIClient):
                 range_start,
                 range_end
             )
-        result = self._call_api_method(
+        response = self._call_api_method(
             url=url,
             server=self.api_server_url,
             headers=headers,
             **params
         )
-        return result.json()
+
+        result = self._parse_response_headers(response.headers)
+        result.update({
+            'data': response.json()
+        })
+        return result
 
     def get_patient(self, _id='', range_start=None, range_end=None, **params):
         url = '/profile/{}'.format(_id or '')
@@ -30,8 +35,12 @@ class CardioQVARKClient(BaseAPIClient):
                 range_start,
                 range_end
             )
-        result = self._call_api_method(url=url, **params)
-        return result.json()
+        response = self._call_api_method(url=url, **params)
+        result = self._parse_response_headers(response.headers)
+        result.update({
+            'data': response.json()
+        })
+        return result
 
     def get_analysis(self, _id, **params):
         url = '/analysis/{}/vsr'.format(_id)
