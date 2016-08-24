@@ -137,14 +137,15 @@ class BaseAPIClient(object):
         )
 
         if response.status_code != 200:
-            raise CardioQVARKException(response.raw)
+            raise CardioQVARKException(response.status_code)
 
         return response
 
     def _parse_response_headers(self, headers):
         result = {}
         if 'content-range' in headers.keys():
-            _from, _to, _max = re.findall('\d+', headers['content-range'])
+            _from, _to, _max = map(int,
+                                   re.findall('\d+', headers['content-range']))
             result.update({
                 'range_start': _from,
                 'range_end': _to,

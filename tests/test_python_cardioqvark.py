@@ -23,6 +23,9 @@ class TestPythonCardioQVARKApiClient(object):
         assert self.test_client.api_server_url
         assert self.test_client.cloud_server_url
 
+    def test_all_methods(self):
+        assert self.test_client.get_method()
+
     def test_client_get_all_cardiograms(self):
         cardiograms = self.test_client.get_cardiogram()
         assert cardiograms

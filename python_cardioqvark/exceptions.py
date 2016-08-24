@@ -8,3 +8,7 @@ class CardioQVARKException(Exception):
 
 class CACertificateException(CardioQVARKException):
     pass
+
+
+class MethodDoesNotExists(CardioQVARKException):
+    pass
