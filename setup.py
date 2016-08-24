@@ -20,7 +20,7 @@ test_requirements = [
 
 setup(
     name='python_cardioqvark',
-    version='0.3.0',
+    version='0.4.0',
     description="Python API wrapper for CardioQVARK",
     long_description=readme + '\n\n' + history,
     author="Maxim Smirnoff",
@@ -37,7 +37,7 @@ setup(
     zip_safe=False,
     keywords='python_cardioqvark',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
