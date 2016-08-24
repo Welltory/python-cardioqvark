@@ -42,7 +42,12 @@ class CardioQVARKClient(BaseAPIClient):
         })
         return result
 
-    def get_analysis(self, _id, **params):
-        url = '/analysis/{}/vsr'.format(_id)
+    def get_method(self, method_name=None):
+        url = '/method/{}'.format(method_name or '')
+        result = self._call_api_method(url=url)
+        return result.json()
+
+    def get_analysis(self, _id, method_name='rr', **params):
+        url = '/analysis/{}/{}'.format(_id, method_name)
         result = self._call_api_method(url=url, **params)
         return result.json()
